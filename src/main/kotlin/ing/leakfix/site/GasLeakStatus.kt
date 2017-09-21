@@ -1,4 +1,4 @@
-package ing.leakfix.site.leakfixingsite
+package ing.leakfix.site
 
 enum class GasLeakStatus {
     UNREPAIRED,

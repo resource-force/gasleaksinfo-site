@@ -1,4 +1,4 @@
-package ing.leakfix.site.leakfixingsite
+package ing.leakfix.site
 
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.web.bind.annotation.RequestMapping

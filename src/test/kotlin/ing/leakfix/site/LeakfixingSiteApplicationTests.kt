@@ -1,4 +1,4 @@
-package ing.leakfix.site.leakfixingsite
+package ing.leakfix.site
 
 import org.junit.Test
 import org.junit.runner.RunWith
