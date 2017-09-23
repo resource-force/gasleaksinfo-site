@@ -27,23 +27,23 @@ import org.springframework.web.bind.annotation.PostMapping
         val allLeaks = getLeaks()
         val uniqueLeaks = allLeaks.distinctBy { it.location }
         val duplicateLeaks = allLeaks.subtract(uniqueLeaks).toMutableList()
-        var mergedLeaks: List<GasLeak> = mutableListOf()
 
         duplicateLeaks.forEach { firstLeak ->
             duplicateLeaks
                     .filter { it != firstLeak && it.location == firstLeak.location }
                     .forEach {
-                duplicateLeaks.remove(it)
-            }
+                        if (firstLeak.shouldMergeWith(it)) {
+                            firstLeak.mergeWith(it)
+                            duplicateLeaks.remove(it)
+                        }
+                    }
         }
 
         return uniqueLeaks + duplicateLeaks
     }
 
     @RequestMapping("/leaks")
-    fun getLeaks(): List<GasLeak> {
-        return repository.findAll()
-    }
+    fun getLeaks(): List<GasLeak> = repository.findAll()
 
     @PostMapping("/leaks")
     fun addLeak(@RequestBody leak: GasLeak): ResponseEntity<String> {

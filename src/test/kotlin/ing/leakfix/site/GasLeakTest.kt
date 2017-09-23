@@ -10,40 +10,65 @@ import org.junit.runner.RunWith
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.test.context.junit4.SpringRunner
 import java.time.LocalDate
+import java.util.*
 
 @RunWith(SpringRunner::class)
 @SpringBootTest
 class GasLeakTest {
+    private final val NGRID_SOURCE = GasLeakSource(
+            vendor = "NGRID",
+            dataset = "Unrepaired 2016",
+            dataBetween = DataValidityRange(
+                    LocalDate.of(2016, 1, 1),
+                    LocalDate.of(2016, 12, 31)))
+    private final val HEET_SOURCE = GasLeakSource(
+            vendor = "MAPC-HEET",
+            dataset = "Study 2016",
+            dataBetween = DataValidityRange(
+                    LocalDate.of(2016, 1, 1),
+                    LocalDate.of(2016, 12, 31)))
+
+    private final val NGRID_REFERENCE_LEAK = GasLeak(
+            location = "18 Piper Road, Acton MA 01720",
+            sources = listOf(NGRID_SOURCE),
+            size = null,
+            status = GasLeakStatus.UNREPAIRED,
+            reportedOn = LocalDate.of(2001, 1, 1),
+            fixedOn = null,
+            ngridId = Random().nextInt())
+    private final val HEET_REFERENCE_LEAK = NGRID_REFERENCE_LEAK
+            .copy(sources = listOf(HEET_SOURCE))
+    private final val MERGED_REFERENCE_LEAK = NGRID_REFERENCE_LEAK
+            .copy(sources = listOf(NGRID_SOURCE, HEET_SOURCE))
 
     @Test
-    fun mergeWith() {
-        // TODO: Add correct expected outcome to pass test
-        Assert.assertEquals(false,
-                GasLeak(
-                        location = "xd",
-                        source = GasLeakSource(
-                                vendor = "NGRID",
-                                dataset = "Unrepaired 2016",
-                                dataBetween = DataValidityRange(
-                                        LocalDate.of(2017, 1, 1),
-                                        LocalDate.of(2017, 12, 31))),
-                        size = null,
-                        status = GasLeakStatus.MISSING,
-                        reportedOn = LocalDate.now(),
-                        fixedOn = LocalDate.now(),
-                        ngridId = 0).mergeWith(
-                        GasLeak(
-                                location = "xd",
-                                source = GasLeakSource(
-                                        vendor = "MAPC-HEET",
-                                        dataset = "Study 2016",
-                                        dataBetween = DataValidityRange(
-                                                LocalDate.of(2017, 1, 1),
-                                                LocalDate.of(2017, 12, 31))),
-                                size = 500,
-                                status = GasLeakStatus.UNREPAIRED,
-                                reportedOn = LocalDate.now(),
-                                fixedOn = LocalDate.now(),
-                                ngridId = 0)))
+    fun mergesSources() = Assert.assertEquals(
+                MERGED_REFERENCE_LEAK,
+                NGRID_REFERENCE_LEAK.mergeWith(HEET_REFERENCE_LEAK))
+
+    @Test
+    fun mergeSelectsProperStatus() {
+        Assert.assertEquals(
+                MERGED_REFERENCE_LEAK.copy(status = GasLeakStatus.FIXED),
+                NGRID_REFERENCE_LEAK.copy(status = GasLeakStatus.FIXED).mergeWith(HEET_REFERENCE_LEAK))
+        Assert.assertEquals(
+                MERGED_REFERENCE_LEAK.copy(status = GasLeakStatus.UNREPAIRED),
+                NGRID_REFERENCE_LEAK.copy(status = GasLeakStatus.MISSING).mergeWith(HEET_REFERENCE_LEAK))
+        Assert.assertEquals(
+                MERGED_REFERENCE_LEAK.copy(status = GasLeakStatus.FIXED),
+                NGRID_REFERENCE_LEAK.copy(status = GasLeakStatus.MISSING)
+                        .mergeWith(HEET_REFERENCE_LEAK.copy(status = GasLeakStatus.FIXED)))
     }
+
+    @Test
+    fun mergeSelectsProperDate() = Assert.assertEquals(
+            MERGED_REFERENCE_LEAK.copy(
+                    reportedOn = LocalDate.of(2001, 1, 1),
+                    fixedOn = LocalDate.of(2001, 1, 1)),
+            NGRID_REFERENCE_LEAK.copy(
+                    reportedOn = LocalDate.of(2001, 1, 1),
+                    fixedOn = LocalDate.of(2001, 1, 1))
+                    .mergeWith(HEET_REFERENCE_LEAK.copy(
+                            reportedOn = LocalDate.of(2001, 1, 2),
+                            fixedOn = LocalDate.of(2001, 1, 2))))
 }

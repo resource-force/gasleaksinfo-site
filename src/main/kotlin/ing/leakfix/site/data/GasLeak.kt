@@ -19,20 +19,20 @@ data class GasLeak(
         merged = sources.size != 1
     }
 
-    /**
-     * Simple constructor for a non-merged entry
-     */
-    constructor(location: String,
-                source: GasLeakSource,
-                size: Int?,
-                status: GasLeakStatus,
-                reportedOn: LocalDate?,
-                fixedOn: LocalDate?,
-                ngridId: Int?) :
-            this(location, listOf(source), size, status, reportedOn, fixedOn, ngridId)
-
     fun shouldMergeWith(leak: GasLeak): Boolean =
             location == leak.location && sources != leak.sources && !merged && !leak.merged
+
+    private fun <T> selectNonNullOrCondition(one: T?, two: T?, condition: (T, T) -> T): T? {
+        return if (one == null && two != null) {
+            two
+        } else if (one != null && two == null) {
+            one
+        } else if (one != null && two != null) {
+            condition(one, two)
+        } else {
+            null
+        }
+    }
 
     fun mergeWith(other: GasLeak): GasLeak {
         if (!shouldMergeWith(other)) {
@@ -44,15 +44,7 @@ data class GasLeak(
                 sources.union(other.sources).toList(),
                 // TODO: Improve algorithm
                 // Pick the lowest size or the non-null one, or null.
-                if (size == null && other.size != null) {
-                    other.size
-                } else if (size != null && other.size == null) {
-                    size
-                } else if (size != null && other.size != null) {
-                    Math.min(size, other.size)
-                } else {
-                    null
-                },
+                selectNonNullOrCondition(size, other.size) { one, two -> Math.min(one, two) },
                 // Pick fixed -> unrepaired -> missing
                 if (status == GasLeakStatus.FIXED || other.status == GasLeakStatus.FIXED) {
                     GasLeakStatus.FIXED
@@ -63,8 +55,10 @@ data class GasLeak(
                 } else {
                     throw NotImplementedError("illegal gas leak status")
                 },
-                if (reportedOn!! < other.reportedOn) reportedOn else other.reportedOn,
-                if (fixedOn!! < other.fixedOn) fixedOn else other.fixedOn,
+                selectNonNullOrCondition(reportedOn, other.reportedOn) {
+                    one, two -> if (one.isBefore(two)) one else two },
+                selectNonNullOrCondition(fixedOn, other.fixedOn) {
+                    one, two -> if (one.isBefore(two)) one else two },
                 ngridId ?: other.ngridId)
     }
 }
