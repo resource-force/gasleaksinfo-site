@@ -1,5 +1,9 @@
 package ing.leakfix.site
 
+import ing.leakfix.site.data.DataValidityRange
+import ing.leakfix.site.data.GasLeak
+import ing.leakfix.site.data.GasLeakSource
+import ing.leakfix.site.data.GasLeakStatus
 import org.junit.Assert
 import org.junit.Test
 import org.junit.runner.RunWith

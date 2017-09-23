@@ -1,6 +1,4 @@
-package ing.leakfix.site
-
-import java.time.Period
+package ing.leakfix.site.data
 
 data class GasLeakSource(
         val vendor: String,
