@@ -29,14 +29,12 @@ import org.springframework.web.bind.annotation.PostMapping
         val duplicateLeaks = allLeaks.subtract(uniqueLeaks).toMutableList()
 
         duplicateLeaks.forEach { firstLeak ->
-            duplicateLeaks
-                    .filter { it != firstLeak && it.location == firstLeak.location }
-                    .forEach {
-                        if (firstLeak.shouldMergeWith(it)) {
-                            firstLeak.mergeWith(it)
-                            duplicateLeaks.remove(it)
-                        }
-                    }
+            duplicateLeaks.forEach { testLeak ->
+                if (firstLeak.shouldMergeWith(testLeak)) {
+                    firstLeak.mergeWith(testLeak)
+                    duplicateLeaks.remove(testLeak)
+                }
+            }
         }
 
         return uniqueLeaks + duplicateLeaks

@@ -22,7 +22,8 @@ data class GasLeak(
     fun shouldMergeWith(leak: GasLeak): Boolean =
             location == leak.location && sources != leak.sources && !merged && !leak.merged
 
-    private fun <T> selectNonNullOrCondition(one: T?, two: T?, condition: (T, T) -> T): T? {
+    private fun <T> selectNonNullOrCondition(
+            one: T?, two: T?, condition: (T, T) -> T): T? {
         return if (one == null && two != null) {
             two
         } else if (one != null && two == null) {
@@ -41,8 +42,7 @@ data class GasLeak(
 
         return GasLeak(
                 location,
-                sources.union(other.sources).toList(),
-                // TODO: Improve algorithm
+                sources + other.sources,
                 // Pick the lowest size or the non-null one, or null.
                 selectNonNullOrCondition(size, other.size) { one, two -> Math.min(one, two) },
                 // Pick fixed -> unrepaired -> missing
