@@ -42,6 +42,13 @@ class GasLeakTest {
             .copy(sources = listOf(NGRID_SOURCE, HEET_SOURCE))
 
     @Test
+    fun mergeFlag() {
+        Assert.assertTrue(MERGED_REFERENCE_LEAK.merged)
+        Assert.assertFalse(NGRID_REFERENCE_LEAK.merged)
+        Assert.assertFalse(HEET_REFERENCE_LEAK.merged)
+    }
+
+    @Test
     fun mergeCombinesSources() = Assert.assertEquals(
                 MERGED_REFERENCE_LEAK,
                 NGRID_REFERENCE_LEAK.mergeWith(HEET_REFERENCE_LEAK))
