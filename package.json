@@ -1,0 +1,24 @@
+{
+  "name": "leakfixing-site",
+  "version": "0.0.1",
+  "description": "A Spring Boot + MongoDB web app to track gas leaks in Acton",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/resource-force/leakfixing-site.git"
+  },
+  "author": "",
+  "contributors": [
+    "Kevin Liu <kevin@potatofrom.space (https://potatofrom.space)",
+    "Kunal Sharda"
+  ],
+  "license": "GPL-3.0",
+  "bugs": {
+    "url": "https://github.com/resource-force/leakfixing-site/issues"
+  },
+  "homepage": "https://github.com/resource-force/leakfixing-site#readme",
+  "dependencies": {}
+}
