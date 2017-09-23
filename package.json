@@ -4,7 +4,7 @@
   "description": "A Spring Boot + MongoDB web app to track gas leaks in Acton",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "./gradlew test"
   },
   "repository": {
     "type": "git",
