@@ -55,10 +55,12 @@ data class GasLeak(
                 } else {
                     throw NotImplementedError("illegal gas leak status")
                 },
+                // Pick the earliest reported-on date and the latest fixed-on date
+                // We want to be conservative here
                 selectNonNullOrCondition(reportedOn, other.reportedOn) {
                     one, two -> if (one.isBefore(two)) one else two },
                 selectNonNullOrCondition(fixedOn, other.fixedOn) {
-                    one, two -> if (one.isBefore(two)) one else two },
+                    one, two -> if (one.isAfter(two)) one else two },
                 ngridId ?: other.ngridId)
     }
 }

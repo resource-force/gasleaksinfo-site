@@ -71,10 +71,10 @@ class GasLeakTest {
     fun mergeSelectsProperDate() = Assert.assertEquals(
             MERGED_REFERENCE_LEAK.copy(
                     reportedOn = LocalDate.of(2001, 1, 1),
-                    fixedOn = LocalDate.of(2001, 1, 1)),
+                    fixedOn = LocalDate.of(2001, 1, 2)),
             NGRID_REFERENCE_LEAK.copy(
                     reportedOn = LocalDate.of(2001, 1, 1),
-                    fixedOn = LocalDate.of(2001, 1, 1))
+                    fixedOn = LocalDate.of(2001, 1, 2))
                     .mergeWith(HEET_REFERENCE_LEAK.copy(
                             reportedOn = LocalDate.of(2001, 1, 2),
                             fixedOn = LocalDate.of(2001, 1, 2))))
