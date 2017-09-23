@@ -12,13 +12,31 @@ import org.springframework.web.bind.annotation.PostMapping
 
 
 @RestController
-@RequestMapping("/api/v0/") class LeakController {
+@RequestMapping("/api/r0/") class LeakController {
     @Autowired
     lateinit var repository: GasLeakRepository
 
-    @RequestMapping("/leaks/{location}")
+    @RequestMapping("/leaks/at/{location}")
     fun getLeak(@PathVariable("location") location: String): List<GasLeak> {
         return repository.findByLocation(location)
+    }
+
+    @RequestMapping("leaks/merged")
+    fun getMergedLeaks(): List<GasLeak> {
+        val allLeaks = getLeaks()
+        val uniqueLeaks = allLeaks.distinctBy { it.location }
+        val duplicateLeaks = allLeaks.subtract(uniqueLeaks).toMutableList()
+        var mergedLeaks: List<GasLeak> = mutableListOf()
+
+        duplicateLeaks.forEach { firstLeak ->
+            duplicateLeaks
+                    .filter { it != firstLeak && it.location == firstLeak.location }
+                    .forEach {
+                duplicateLeaks.remove(it)
+            }
+        }
+
+        return uniqueLeaks + duplicateLeaks
     }
 
     @RequestMapping("/leaks")
