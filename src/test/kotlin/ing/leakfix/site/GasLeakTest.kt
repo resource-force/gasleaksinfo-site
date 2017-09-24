@@ -22,7 +22,7 @@ import ing.leakfix.site.data.DataValidityRange
 import ing.leakfix.site.data.GasLeak
 import ing.leakfix.site.data.GasLeakSource
 import ing.leakfix.site.data.GasLeakStatus
-import org.junit.Assert
+import org.junit.Assert.*
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.springframework.boot.test.context.SpringBootTest
@@ -61,32 +61,32 @@ class GasLeakTest {
 
     @Test
     fun mergeFlag() {
-        Assert.assertTrue(MERGED_REFERENCE_LEAK.merged)
-        Assert.assertFalse(NGRID_REFERENCE_LEAK.merged)
-        Assert.assertFalse(HEET_REFERENCE_LEAK.merged)
+        assertTrue(MERGED_REFERENCE_LEAK.merged)
+        assertFalse(NGRID_REFERENCE_LEAK.merged)
+        assertFalse(HEET_REFERENCE_LEAK.merged)
     }
 
     @Test
-    fun mergeCombinesSources() = Assert.assertEquals(
+    fun mergeCombinesSources() = assertEquals(
                 MERGED_REFERENCE_LEAK,
                 NGRID_REFERENCE_LEAK.merge(HEET_REFERENCE_LEAK))
 
     @Test
     fun mergeSelectsProperStatus() {
-        Assert.assertEquals(
+        assertEquals(
                 MERGED_REFERENCE_LEAK.copy(status = GasLeakStatus.FIXED),
                 NGRID_REFERENCE_LEAK.copy(status = GasLeakStatus.FIXED) merge HEET_REFERENCE_LEAK)
-        Assert.assertEquals(
+        assertEquals(
                 MERGED_REFERENCE_LEAK.copy(status = GasLeakStatus.UNREPAIRED),
                 NGRID_REFERENCE_LEAK.copy(status = GasLeakStatus.MISSING) merge HEET_REFERENCE_LEAK)
-        Assert.assertEquals(
+        assertEquals(
                 MERGED_REFERENCE_LEAK.copy(status = GasLeakStatus.FIXED),
                 NGRID_REFERENCE_LEAK.copy(status = GasLeakStatus.MISSING)
                         merge HEET_REFERENCE_LEAK.copy(status = GasLeakStatus.FIXED))
     }
 
     @Test
-    fun mergeSelectsProperDate() = Assert.assertEquals(
+    fun mergeSelectsProperDate() = assertEquals(
             MERGED_REFERENCE_LEAK.copy(
                     reportedOn = LocalDate.of(2001, 1, 1),
                     fixedOn = LocalDate.of(2001, 1, 2)),
