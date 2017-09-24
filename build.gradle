@@ -66,3 +66,13 @@ dependencies {
     compile 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.9.1'
     compile 'org.springframework.boot:spring-boot-devtools'
 }
+
+npm_run {
+    args = ['build']
+    dependsOn npmInstall
+}
+
+bootRun {
+    addResources = true
+    dependsOn npm_run
+}
