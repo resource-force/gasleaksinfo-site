@@ -32,7 +32,7 @@ data class GasLeak(
 
     init {
         if (sources.isEmpty()) {
-            throw IllegalArgumentException("sources must have at least one entry")
+            throw IllegalArgumentException("Must have at least one source.")
         }
         merged = sources.size != 1
     }
@@ -51,30 +51,33 @@ data class GasLeak(
 
     infix fun merge(other: GasLeak): GasLeak {
         if (!shouldMergeWith(other)) {
-            throw IllegalArgumentException("Leaks should not be merged")
+            throw IllegalArgumentException("Leaks $this and $other should not be merged.")
         }
 
         return GasLeak(
-                location,
-                sources + other.sources,
+                location = location,
+                sources = sources + other.sources,
                 // Pick the lowest size or the non-null one, or null.
-                selectNonNullOrCondition(size, other.size) { one, two -> Math.min(one, two) },
+                size = selectNonNullOrCondition(size, other.size) { one, two -> Math.min(one, two) },
                 // Pick fixed -> unrepaired -> missing
-                if (status == GasLeakStatus.FIXED || other.status == GasLeakStatus.FIXED) {
+                status = if (status == GasLeakStatus.FIXED ||
+                        other.status == GasLeakStatus.FIXED) {
                     GasLeakStatus.FIXED
-                } else if (status == GasLeakStatus.UNREPAIRED || other.status == GasLeakStatus.UNREPAIRED) {
+                } else if (status == GasLeakStatus.UNREPAIRED ||
+                        other.status == GasLeakStatus.UNREPAIRED) {
                     GasLeakStatus.UNREPAIRED
-                } else if (status == GasLeakStatus.MISSING || other.status == GasLeakStatus.MISSING) {
+                } else if (status == GasLeakStatus.MISSING ||
+                        other.status == GasLeakStatus.MISSING) {
                     GasLeakStatus.MISSING
                 } else {
-                    throw NotImplementedError("illegal gas leak status")
+                    throw NotImplementedError("Unimplemented gas leak status in merge.")
                 },
                 // Pick the earliest reported-on date and the latest fixed-on date
                 // We want to be conservative here
-                selectNonNullOrCondition(reportedOn, other.reportedOn) {
+                reportedOn = selectNonNullOrCondition(reportedOn, other.reportedOn) {
                     one, two -> if (one.isBefore(two)) one else two },
-                selectNonNullOrCondition(fixedOn, other.fixedOn) {
+                fixedOn = selectNonNullOrCondition(fixedOn, other.fixedOn) {
                     one, two -> if (one.isAfter(two)) one else two },
-                ngridId ?: other.ngridId)
+                ngridId = ngridId ?: other.ngridId)
     }
 }
