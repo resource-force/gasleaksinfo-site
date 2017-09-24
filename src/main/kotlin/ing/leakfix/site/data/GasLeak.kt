@@ -53,7 +53,7 @@ data class GasLeak(
         }
     }
 
-    fun mergeWith(other: GasLeak): GasLeak {
+    infix fun merge(other: GasLeak): GasLeak {
         if (!shouldMergeWith(other)) {
             throw IllegalArgumentException("Leaks should not be merged")
         }

@@ -45,17 +45,20 @@ import org.springframework.web.bind.annotation.PostMapping
         val allLeaks = getLeaks()
         val uniqueLeaks = allLeaks.distinctBy { it.location }
         val duplicateLeaks = allLeaks.subtract(uniqueLeaks).toMutableList()
+        val mergedLeaks = allLeaks.toMutableList()
 
         duplicateLeaks.forEach { firstLeak ->
+            var uberLeak = firstLeak
             duplicateLeaks.forEach { testLeak ->
                 if (firstLeak.shouldMergeWith(testLeak)) {
-                    firstLeak.mergeWith(testLeak)
+                    uberLeak = uberLeak merge testLeak
                     duplicateLeaks.remove(testLeak)
                 }
             }
+            mergedLeaks += uberLeak
         }
 
-        return uniqueLeaks + duplicateLeaks
+        return mergedLeaks
     }
 
     @RequestMapping("/leaks")

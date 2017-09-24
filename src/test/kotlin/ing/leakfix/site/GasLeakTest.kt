@@ -69,20 +69,20 @@ class GasLeakTest {
     @Test
     fun mergeCombinesSources() = Assert.assertEquals(
                 MERGED_REFERENCE_LEAK,
-                NGRID_REFERENCE_LEAK.mergeWith(HEET_REFERENCE_LEAK))
+                NGRID_REFERENCE_LEAK.merge(HEET_REFERENCE_LEAK))
 
     @Test
     fun mergeSelectsProperStatus() {
         Assert.assertEquals(
                 MERGED_REFERENCE_LEAK.copy(status = GasLeakStatus.FIXED),
-                NGRID_REFERENCE_LEAK.copy(status = GasLeakStatus.FIXED).mergeWith(HEET_REFERENCE_LEAK))
+                NGRID_REFERENCE_LEAK.copy(status = GasLeakStatus.FIXED) merge HEET_REFERENCE_LEAK)
         Assert.assertEquals(
                 MERGED_REFERENCE_LEAK.copy(status = GasLeakStatus.UNREPAIRED),
-                NGRID_REFERENCE_LEAK.copy(status = GasLeakStatus.MISSING).mergeWith(HEET_REFERENCE_LEAK))
+                NGRID_REFERENCE_LEAK.copy(status = GasLeakStatus.MISSING) merge HEET_REFERENCE_LEAK)
         Assert.assertEquals(
                 MERGED_REFERENCE_LEAK.copy(status = GasLeakStatus.FIXED),
                 NGRID_REFERENCE_LEAK.copy(status = GasLeakStatus.MISSING)
-                        .mergeWith(HEET_REFERENCE_LEAK.copy(status = GasLeakStatus.FIXED)))
+                        merge HEET_REFERENCE_LEAK.copy(status = GasLeakStatus.FIXED))
     }
 
     @Test
@@ -93,7 +93,7 @@ class GasLeakTest {
             NGRID_REFERENCE_LEAK.copy(
                     reportedOn = LocalDate.of(2001, 1, 1),
                     fixedOn = LocalDate.of(2001, 1, 2))
-                    .mergeWith(HEET_REFERENCE_LEAK.copy(
+                    merge HEET_REFERENCE_LEAK.copy(
                             reportedOn = LocalDate.of(2001, 1, 2),
-                            fixedOn = LocalDate.of(2001, 1, 2))))
+                            fixedOn = LocalDate.of(2001, 1, 2)))
 }
