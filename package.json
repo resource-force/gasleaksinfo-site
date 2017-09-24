@@ -20,5 +20,6 @@
     "url": "https://github.com/resource-force/leakfixing-site/issues"
   },
   "homepage": "https://github.com/resource-force/leakfixing-site#readme",
-  "dependencies": {}
+  "dependencies": {},
+  "private": true
 }

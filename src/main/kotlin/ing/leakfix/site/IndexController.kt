@@ -25,7 +25,7 @@ import org.springframework.web.bind.annotation.RequestMapping
 @Controller
 class IndexController {
     @RequestMapping("/")
-    fun index(model: Model): String {
+    fun index(): String {
         return "index"
     }
 }
