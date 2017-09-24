@@ -60,7 +60,7 @@ class GasLeakTest {
             .copy(sources = listOf(NGRID_SOURCE, HEET_SOURCE))
 
     @Test
-    fun mergeFlag() {
+    fun mergeSetsMergedFlag() {
         assertTrue(MERGED_REFERENCE_LEAK.merged)
         assertFalse(NGRID_REFERENCE_LEAK.merged)
         assertFalse(HEET_REFERENCE_LEAK.merged)
@@ -96,4 +96,20 @@ class GasLeakTest {
                     merge HEET_REFERENCE_LEAK.copy(
                             reportedOn = LocalDate.of(2001, 1, 2),
                             fixedOn = LocalDate.of(2001, 1, 2)))
+
+    @Test
+    fun doesNotMergeSameSource() {
+        assertFalse(NGRID_REFERENCE_LEAK.shouldMergeWith(NGRID_REFERENCE_LEAK))
+        assertFalse(HEET_REFERENCE_LEAK.shouldMergeWith(HEET_REFERENCE_LEAK))
+    }
+
+    @Test
+    fun doesNotMergeDifferentAddresses() = assertFalse(NGRID_REFERENCE_LEAK
+            .shouldMergeWith(HEET_REFERENCE_LEAK.copy(location = "19 Piper Road, Acton MA 01720")))
+
+    @Test
+    fun doesNotMergeMergedLeak() {
+        assertFalse(MERGED_REFERENCE_LEAK.shouldMergeWith(NGRID_REFERENCE_LEAK))
+        assertFalse(MERGED_REFERENCE_LEAK.shouldMergeWith(HEET_REFERENCE_LEAK))
+    }
 }
