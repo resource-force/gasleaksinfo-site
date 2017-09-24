@@ -42,14 +42,10 @@ data class GasLeak(
 
     private fun <T> selectNonNullOrCondition(
             one: T?, two: T?, condition: (T, T) -> T): T? {
-        return if (one == null && two != null) {
-            two
-        } else if (one != null && two == null) {
-            one
-        } else if (one != null && two != null) {
+        return if (one != null && two != null) {
             condition(one, two)
         } else {
-            null
+            one ?: two
         }
     }
 
