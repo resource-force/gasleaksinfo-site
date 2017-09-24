@@ -1,5 +1,7 @@
-var webpack = require('webpack');
-var path = require('path');
+"use strict";
+
+const webpack = require('webpack');
+const path = require('path');
 
 module.exports = {
     context: path.join(__dirname, "src/main"),
@@ -23,6 +25,8 @@ module.exports = {
     },
     devServer: {
             port: 9090,
+            contentBase: [ "./src/main/resources/templates" ],
+            watchContentBase: true,
             proxy: {
                 '**': {
                     target: 'http://localhost:8080',
@@ -33,5 +37,6 @@ module.exports = {
             },
             publicPath: 'http://localhost:9090/static/build/'
         },
-    plugins: []
+    plugins: [
+    ]
 };
