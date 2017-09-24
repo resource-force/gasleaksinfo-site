@@ -1,6 +1,6 @@
 /*
  * leakfixing-site: a site to show and manage a gas leak database
- * Copyright (C) 2017 Kevin Liu
+ * Copyright (C) 2017 Kevin\ Liu
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,7 +18,4 @@
 
 package ing.leakfix.site.data
 
-data class GasLeakSource(
-        val vendor: String,
-        val dataset: String,
-        val dataBetween: DataValidityRange)
+data class SourceEntry(val id: Int, val dataset: SourceDataset)

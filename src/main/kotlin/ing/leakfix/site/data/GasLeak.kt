@@ -21,24 +21,24 @@ package ing.leakfix.site.data
 import java.time.LocalDate
 
 data class GasLeak(
+        val represents: List<SourceEntry>,
         val location: String,
-        val sources: List<GasLeakSource>,
         val size: Int?,
         val status: GasLeakStatus,
         val reportedOn: LocalDate?,
-        val fixedOn: LocalDate?,
-        val ngridId: Int?) {
+        val fixedOn: LocalDate?) {
     val merged: Boolean
 
     init {
-        if (sources.isEmpty()) {
-            throw IllegalArgumentException("Must have at least one source.")
-        }
-        merged = sources.size != 1
+        represents.isEmpty() && throw IllegalArgumentException("Must have at least one source.")
+        merged = represents.size != 1
     }
 
-    fun shouldMergeWith(leak: GasLeak): Boolean =
-            location == leak.location && sources != leak.sources && !merged && !leak.merged
+    fun shouldMergeWith(other: GasLeak): Boolean =
+            !merged && !other.merged &&
+                    represents[0] != other.represents[0] &&
+                    represents[0].dataset != other.represents[0].dataset &&
+                    location == other.location
 
     private fun <T> selectNonNullOrCondition(
             one: T?, two: T?, condition: (T, T) -> T): T? {
@@ -55,8 +55,8 @@ data class GasLeak(
         }
 
         return GasLeak(
+                represents = represents + other.represents,
                 location = location,
-                sources = sources + other.sources,
                 // Pick the lowest size or the non-null one, or null.
                 size = selectNonNullOrCondition(size, other.size) { one, two -> Math.min(one, two) },
                 // Pick fixed -> unrepaired -> missing
@@ -77,7 +77,6 @@ data class GasLeak(
                 reportedOn = selectNonNullOrCondition(reportedOn, other.reportedOn) {
                     one, two -> if (one.isBefore(two)) one else two },
                 fixedOn = selectNonNullOrCondition(fixedOn, other.fixedOn) {
-                    one, two -> if (one.isAfter(two)) one else two },
-                ngridId = ngridId ?: other.ngridId)
+                    one, two -> if (one.isAfter(two)) one else two })
     }
 }

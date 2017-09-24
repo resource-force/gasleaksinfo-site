@@ -18,10 +18,7 @@
 
 package ing.leakfix.site
 
-import ing.leakfix.site.data.DataValidityRange
-import ing.leakfix.site.data.GasLeak
-import ing.leakfix.site.data.GasLeakSource
-import ing.leakfix.site.data.GasLeakStatus
+import ing.leakfix.site.data.*
 import org.junit.Assert.*
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -33,31 +30,32 @@ import java.util.*
 @RunWith(SpringRunner::class)
 @SpringBootTest
 class GasLeakTest {
-    private final val NGRID_SOURCE = GasLeakSource(
+    private final val NGRID_SOURCE = SourceDataset(
             vendor = "NGRID",
-            dataset = "Unrepaired 2016",
-            dataBetween = DataValidityRange(
+            name = "Unrepaired 2016",
+            validBetween = DatasetValidityRange(
                     LocalDate.of(2016, 1, 1),
                     LocalDate.of(2016, 12, 31)))
-    private final val HEET_SOURCE = GasLeakSource(
+    private final val HEET_SOURCE = SourceDataset(
             vendor = "MAPC-HEET",
-            dataset = "Study 2016",
-            dataBetween = DataValidityRange(
+            name = "Study 2016",
+            validBetween = DatasetValidityRange(
                     LocalDate.of(2016, 1, 1),
                     LocalDate.of(2016, 12, 31)))
+    private final val NGRID_ENTRY = SourceEntry(1, NGRID_SOURCE)
+    private final val HEET_ENTRY = SourceEntry(2, HEET_SOURCE)
 
     private final val NGRID_REFERENCE_LEAK = GasLeak(
+            represents = listOf(NGRID_ENTRY),
             location = "18 Piper Road, Acton MA 01720",
-            sources = listOf(NGRID_SOURCE),
             size = null,
             status = GasLeakStatus.UNREPAIRED,
             reportedOn = LocalDate.of(2001, 1, 1),
-            fixedOn = null,
-            ngridId = Random().nextInt())
+            fixedOn = null)
     private final val HEET_REFERENCE_LEAK = NGRID_REFERENCE_LEAK
-            .copy(sources = listOf(HEET_SOURCE))
+            .copy(represents = listOf(HEET_ENTRY))
     private final val MERGED_REFERENCE_LEAK = NGRID_REFERENCE_LEAK
-            .copy(sources = listOf(NGRID_SOURCE, HEET_SOURCE))
+            .copy(represents = listOf(NGRID_ENTRY, HEET_ENTRY))
 
     @Test
     fun mergeSetsMergedFlag() {
@@ -96,6 +94,10 @@ class GasLeakTest {
                     merge HEET_REFERENCE_LEAK.copy(
                             reportedOn = LocalDate.of(2001, 1, 2),
                             fixedOn = LocalDate.of(2001, 1, 2)))
+
+    @Test
+    fun doesNotMergeSameIds() = assertFalse(NGRID_REFERENCE_LEAK
+            .shouldMergeWith(HEET_REFERENCE_LEAK.copy(represents = listOf(NGRID_ENTRY))))
 
     @Test
     fun doesNotMergeSameSource() {
