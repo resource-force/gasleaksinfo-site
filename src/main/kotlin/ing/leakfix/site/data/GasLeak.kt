@@ -20,24 +20,25 @@ package ing.leakfix.site.data
 
 import java.time.LocalDate
 
+// TODO Convert sourceEntries to a map-kinda-thing.
 data class GasLeak(
-        val represents: List<SourceEntry>,
+        val sourceEntries: List<SourceEntry>,
         val location: String,
         val size: Int?,
         val status: GasLeakStatus,
         val reportedOn: LocalDate?,
         val fixedOn: LocalDate?) {
-    val merged: Boolean
+    val isMerged: Boolean
 
     init {
-        represents.isEmpty() && throw IllegalArgumentException("Must have at least one source.")
-        merged = represents.size != 1
+        sourceEntries.isEmpty() && throw IllegalArgumentException("Must have at least one source.")
+        isMerged = sourceEntries.size != 1
     }
 
     fun shouldMergeWith(other: GasLeak): Boolean =
-            !merged && !other.merged &&
-                    represents[0] != other.represents[0] &&
-                    represents[0].dataset != other.represents[0].dataset &&
+            !isMerged && !other.isMerged &&
+                    sourceEntries[0] != other.sourceEntries[0] &&
+                    sourceEntries[0].dataset != other.sourceEntries[0].dataset &&
                     location == other.location
 
     private fun <T> selectNonNullOrCondition(
@@ -55,7 +56,7 @@ data class GasLeak(
         }
 
         return GasLeak(
-                represents = represents + other.represents,
+                sourceEntries = sourceEntries + other.sourceEntries,
                 location = location,
                 // Pick the lowest size or the non-null one, or null.
                 size = selectNonNullOrCondition(size, other.size) { one, two -> Math.min(one, two) },

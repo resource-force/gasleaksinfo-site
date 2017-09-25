@@ -25,7 +25,6 @@ import org.junit.runner.RunWith
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.test.context.junit4.SpringRunner
 import java.time.LocalDate
-import java.util.*
 
 @RunWith(SpringRunner::class)
 @SpringBootTest
@@ -46,22 +45,22 @@ class GasLeakTest {
     private final val HEET_ENTRY = SourceEntry(2, HEET_SOURCE)
 
     private final val NGRID_REFERENCE_LEAK = GasLeak(
-            represents = listOf(NGRID_ENTRY),
+            sourceEntries = listOf(NGRID_ENTRY),
             location = "18 Piper Road, Acton MA 01720",
             size = null,
             status = GasLeakStatus.UNREPAIRED,
             reportedOn = LocalDate.of(2001, 1, 1),
             fixedOn = null)
     private final val HEET_REFERENCE_LEAK = NGRID_REFERENCE_LEAK
-            .copy(represents = listOf(HEET_ENTRY))
+            .copy(sourceEntries = listOf(HEET_ENTRY))
     private final val MERGED_REFERENCE_LEAK = NGRID_REFERENCE_LEAK
-            .copy(represents = listOf(NGRID_ENTRY, HEET_ENTRY))
+            .copy(sourceEntries = listOf(NGRID_ENTRY, HEET_ENTRY))
 
     @Test
     fun mergeSetsMergedFlag() {
-        assertTrue(MERGED_REFERENCE_LEAK.merged)
-        assertFalse(NGRID_REFERENCE_LEAK.merged)
-        assertFalse(HEET_REFERENCE_LEAK.merged)
+        assertTrue(MERGED_REFERENCE_LEAK.isMerged)
+        assertFalse(NGRID_REFERENCE_LEAK.isMerged)
+        assertFalse(HEET_REFERENCE_LEAK.isMerged)
     }
 
     @Test
@@ -97,7 +96,7 @@ class GasLeakTest {
 
     @Test
     fun doesNotMergeSameIds() = assertFalse(NGRID_REFERENCE_LEAK
-            .shouldMergeWith(HEET_REFERENCE_LEAK.copy(represents = listOf(NGRID_ENTRY))))
+            .shouldMergeWith(HEET_REFERENCE_LEAK.copy(sourceEntries = listOf(NGRID_ENTRY))))
 
     @Test
     fun doesNotMergeSameSource() {

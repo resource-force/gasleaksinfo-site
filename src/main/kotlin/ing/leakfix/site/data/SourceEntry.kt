@@ -18,4 +18,6 @@
 
 package ing.leakfix.site.data
 
-data class SourceEntry(val id: Int, val dataset: SourceDataset)
+import java.io.Serializable
+
+data class SourceEntry(val id: Int, val dataset: SourceDataset) : Serializable

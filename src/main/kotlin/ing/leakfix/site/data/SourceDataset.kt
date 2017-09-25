@@ -21,4 +21,10 @@ package ing.leakfix.site.data
 data class SourceDataset(
         val vendor: String,
         val name: String,
-        val validBetween: DatasetValidityRange)
+        val validBetween: DatasetValidityRange?) {
+    /**
+     * Only use for constructing a SourceDataset to compare to another.
+     * validBetween is not considered for equality.
+     */
+    internal constructor(vendor: String, name: String): this(vendor, name, null)
+}

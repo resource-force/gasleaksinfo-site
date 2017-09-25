@@ -18,7 +18,10 @@
 
 package ing.leakfix.site
 
+import ing.leakfix.site.data.DatasetValidityRange
 import ing.leakfix.site.data.GasLeak
+import ing.leakfix.site.data.SourceDataset
+import ing.leakfix.site.data.SourceEntry
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
@@ -28,6 +31,7 @@ import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.PostMapping
+import java.time.LocalDate
 
 
 @RestController
@@ -35,9 +39,21 @@ import org.springframework.web.bind.annotation.PostMapping
     @Autowired
     lateinit var repository: GasLeakRepository
 
-    @RequestMapping("/leaks/at/{location}")
+    /*@RequestMapping("/leaks/at/{location}")
     fun getLeak(@PathVariable("location") location: String): List<GasLeak> {
-        return repository.findByLocation(location)
+        return repository.findBySourceEntries(location)
+    }*/
+
+    @RequestMapping("leaks/canonical/{vendor}/{dataset}/{id}")
+    fun getLeakCanonical(@PathVariable("vendor") vendor: String,
+                         @PathVariable("dataset") dataset: String,
+                         @PathVariable("id") id: Int): GasLeak {
+        return repository.findBySourceEntries(arrayListOf(
+                SourceEntry(
+                        id = id,
+                        dataset = SourceDataset(
+                                vendor = vendor,
+                                name = dataset))))
     }
 
     @RequestMapping("leaks/merged")
@@ -72,14 +88,14 @@ import org.springframework.web.bind.annotation.PostMapping
 
     //This is of course a very naive implementation! We are assuming unique names...
     // TODO: Fix
-    @DeleteMapping("/leaks/{location}")
+    /*@DeleteMapping("/leaks/{location}")
     fun deleteLeak(@PathVariable location: String): ResponseEntity<String> {
-        val leaks = repository.findByLocation(location)
+        val leaks = repository.findBySourceEntry(location)
         if (leaks.size == 1) {
             val leak = leaks.get(0)
             repository.delete(leak)
             return ResponseEntity(HttpStatus.ACCEPTED)
         }
         return ResponseEntity(HttpStatus.BAD_REQUEST)
-    }
+    }*/
 }
