@@ -18,13 +18,9 @@
 
 package ing.leakfix.site.data
 
+import java.time.LocalDate
+
 data class SourceDataset(
         val vendor: String,
         val name: String,
-        val validBetween: DatasetValidityRange?) {
-    /**
-     * Only use for constructing a SourceDataset to compare to another.
-     * validBetween is not considered for equality.
-     */
-    internal constructor(vendor: String, name: String): this(vendor, name, null)
-}
+        val between: DatasetValidityRange?)

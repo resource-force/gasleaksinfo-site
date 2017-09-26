@@ -18,10 +18,7 @@
 
 package ing.leakfix.site
 
-import ing.leakfix.site.data.DatasetValidityRange
-import ing.leakfix.site.data.GasLeak
-import ing.leakfix.site.data.SourceDataset
-import ing.leakfix.site.data.SourceEntry
+import ing.leakfix.site.data.*
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
@@ -44,37 +41,24 @@ import java.time.LocalDate
         return repository.findBySourceEntries(location)
     }*/
 
-    @RequestMapping("leaks/canonical/{vendor}/{dataset}/{id}")
-    fun getLeakCanonical(@PathVariable("vendor") vendor: String,
-                         @PathVariable("dataset") dataset: String,
-                         @PathVariable("id") id: Int): GasLeak {
-        return repository.findBySourceEntries(arrayListOf(
-                SourceEntry(
-                        id = id,
-                        dataset = SourceDataset(
-                                vendor = vendor,
-                                name = dataset))))
-    }
-
     @RequestMapping("leaks/merged")
-    fun getMergedLeaks(): List<GasLeak> {
-        val allLeaks = getLeaks()
-        val uniqueLeaks = allLeaks.distinctBy { it.location }
-        val duplicateLeaks = allLeaks.subtract(uniqueLeaks).toMutableList()
-        val mergedLeaks = allLeaks.toMutableList()
-
-        duplicateLeaks.forEach { firstLeak ->
-            var uberLeak = firstLeak
-            duplicateLeaks.forEach { testLeak ->
-                if (firstLeak.shouldMergeWith(testLeak)) {
-                    uberLeak = uberLeak merge testLeak
-                    duplicateLeaks.remove(testLeak)
+    fun getLeaksMerged(): List<MergedGasLeak> {
+        val mergeableLeakSets: MutableList<Array<GasLeak>> = mutableListOf()
+        getLeaks().forEach { testLeak ->
+            var added = false
+            mergeableLeakSets.forEachIndexed { i, it ->
+                if (MergedGasLeak.shouldMerge(*(it + testLeak))) {
+                    mergeableLeakSets[i] = it + testLeak
+                    added = true
+                } else {
+                    mergeableLeakSets[i] = it
                 }
             }
-            mergedLeaks += uberLeak
+            if (!added) {
+                mergeableLeakSets += arrayOf(testLeak)
+            }
         }
-
-        return mergedLeaks
+        return mergeableLeakSets.map { MergedGasLeak.of(*it) }
     }
 
     @RequestMapping("/leaks")

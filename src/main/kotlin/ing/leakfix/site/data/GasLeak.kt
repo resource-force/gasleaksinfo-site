@@ -18,66 +18,17 @@
 
 package ing.leakfix.site.data
 
+import org.springframework.data.mongodb.core.index.Indexed
 import java.time.LocalDate
 
 // TODO Convert sourceEntries to a map-kinda-thing.
 data class GasLeak(
-        val sourceEntries: List<SourceEntry>,
+        val id: Int,
+        val source: SourceDataset,
         val location: String,
-        val size: Int?,
         val status: GasLeakStatus,
+        val size: Int?,
         val reportedOn: LocalDate?,
         val fixedOn: LocalDate?) {
-    val isMerged: Boolean
 
-    init {
-        sourceEntries.isEmpty() && throw IllegalArgumentException("Must have at least one source.")
-        isMerged = sourceEntries.size != 1
-    }
-
-    fun shouldMergeWith(other: GasLeak): Boolean =
-            !isMerged && !other.isMerged &&
-                    sourceEntries[0] != other.sourceEntries[0] &&
-                    sourceEntries[0].dataset != other.sourceEntries[0].dataset &&
-                    location == other.location
-
-    private fun <T> selectNonNullOrCondition(
-            one: T?, two: T?, condition: (T, T) -> T): T? {
-        return if (one != null && two != null) {
-            condition(one, two)
-        } else {
-            one ?: two
-        }
-    }
-
-    infix fun merge(other: GasLeak): GasLeak {
-        if (!shouldMergeWith(other)) {
-            throw IllegalArgumentException("Leaks $this and $other should not be merged.")
-        }
-
-        return GasLeak(
-                sourceEntries = sourceEntries + other.sourceEntries,
-                location = location,
-                // Pick the lowest size or the non-null one, or null.
-                size = selectNonNullOrCondition(size, other.size) { one, two -> Math.min(one, two) },
-                // Pick fixed -> unrepaired -> missing
-                status = if (status == GasLeakStatus.FIXED ||
-                        other.status == GasLeakStatus.FIXED) {
-                    GasLeakStatus.FIXED
-                } else if (status == GasLeakStatus.UNREPAIRED ||
-                        other.status == GasLeakStatus.UNREPAIRED) {
-                    GasLeakStatus.UNREPAIRED
-                } else if (status == GasLeakStatus.MISSING ||
-                        other.status == GasLeakStatus.MISSING) {
-                    GasLeakStatus.MISSING
-                } else {
-                    throw NotImplementedError("Unimplemented gas leak status in merge.")
-                },
-                // Pick the earliest reported-on date and the latest fixed-on date
-                // We want to be conservative here
-                reportedOn = selectNonNullOrCondition(reportedOn, other.reportedOn) {
-                    one, two -> if (one.isBefore(two)) one else two },
-                fixedOn = selectNonNullOrCondition(fixedOn, other.fixedOn) {
-                    one, two -> if (one.isAfter(two)) one else two })
-    }
 }

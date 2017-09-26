@@ -19,10 +19,10 @@
 package ing.leakfix.site
 
 import ing.leakfix.site.data.GasLeak
-import ing.leakfix.site.data.SourceEntry
+import ing.leakfix.site.data.SourceDataset
 import org.springframework.data.mongodb.repository.MongoRepository
 
 // ArrayList because it has to be serializable
-interface GasLeakRepository : MongoRepository<GasLeak, ArrayList<SourceEntry>> {
-    fun findBySourceEntries(sourceEntries: ArrayList<SourceEntry>): GasLeak
+interface GasLeakRepository : MongoRepository<GasLeak, ArrayList<SourceDataset>> {
+    //fun findBySourceEntries(sourceEntries: ArrayList<SourceDataset>): GasLeak
 }

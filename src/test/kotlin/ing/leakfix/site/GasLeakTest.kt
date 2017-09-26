@@ -32,85 +32,79 @@ class GasLeakTest {
     private final val NGRID_SOURCE = SourceDataset(
             vendor = "NGRID",
             name = "Unrepaired 2016",
-            validBetween = DatasetValidityRange(
+            between = DatasetValidityRange(
                     LocalDate.of(2016, 1, 1),
                     LocalDate.of(2016, 12, 31)))
     private final val HEET_SOURCE = SourceDataset(
             vendor = "MAPC-HEET",
             name = "Study 2016",
-            validBetween = DatasetValidityRange(
+            between = DatasetValidityRange(
                     LocalDate.of(2016, 1, 1),
                     LocalDate.of(2016, 12, 31)))
-    private final val NGRID_ENTRY = SourceEntry(1, NGRID_SOURCE)
-    private final val HEET_ENTRY = SourceEntry(2, HEET_SOURCE)
 
     private final val NGRID_REFERENCE_LEAK = GasLeak(
-            sourceEntries = listOf(NGRID_ENTRY),
+            id = 1,
+            source = NGRID_SOURCE,
             location = "18 Piper Road, Acton MA 01720",
             size = null,
             status = GasLeakStatus.UNREPAIRED,
             reportedOn = LocalDate.of(2001, 1, 1),
             fixedOn = null)
     private final val HEET_REFERENCE_LEAK = NGRID_REFERENCE_LEAK
-            .copy(sourceEntries = listOf(HEET_ENTRY))
-    private final val MERGED_REFERENCE_LEAK = NGRID_REFERENCE_LEAK
-            .copy(sourceEntries = listOf(NGRID_ENTRY, HEET_ENTRY))
-
-    @Test
-    fun mergeSetsMergedFlag() {
-        assertTrue(MERGED_REFERENCE_LEAK.isMerged)
-        assertFalse(NGRID_REFERENCE_LEAK.isMerged)
-        assertFalse(HEET_REFERENCE_LEAK.isMerged)
-    }
+            .copy(id = 2, source = HEET_SOURCE)
+    private final val MERGED_REFERENCE_LEAK = MergedGasLeak(
+            fromIds = listOf(1, 2),
+            inDatasets = listOf(NGRID_SOURCE, HEET_SOURCE),
+            location = "18 Piper Road, Acton MA 01720",
+            size = null,
+            status = GasLeakStatus.UNREPAIRED,
+            firstReportedOn = LocalDate.of(2001, 1, 1),
+            fixedOn = null
+    )
 
     @Test
     fun mergeCombinesSources() = assertEquals(
                 MERGED_REFERENCE_LEAK,
-                NGRID_REFERENCE_LEAK.merge(HEET_REFERENCE_LEAK))
+                MergedGasLeak.of(NGRID_REFERENCE_LEAK, HEET_REFERENCE_LEAK))
 
     @Test
     fun mergeSelectsProperStatus() {
         assertEquals(
                 MERGED_REFERENCE_LEAK.copy(status = GasLeakStatus.FIXED),
-                NGRID_REFERENCE_LEAK.copy(status = GasLeakStatus.FIXED) merge HEET_REFERENCE_LEAK)
+                MergedGasLeak.of(NGRID_REFERENCE_LEAK.copy(status = GasLeakStatus.FIXED), HEET_REFERENCE_LEAK))
         assertEquals(
                 MERGED_REFERENCE_LEAK.copy(status = GasLeakStatus.UNREPAIRED),
-                NGRID_REFERENCE_LEAK.copy(status = GasLeakStatus.MISSING) merge HEET_REFERENCE_LEAK)
+                MergedGasLeak.of(NGRID_REFERENCE_LEAK.copy(status = GasLeakStatus.MISSING), HEET_REFERENCE_LEAK))
         assertEquals(
                 MERGED_REFERENCE_LEAK.copy(status = GasLeakStatus.FIXED),
-                NGRID_REFERENCE_LEAK.copy(status = GasLeakStatus.MISSING)
-                        merge HEET_REFERENCE_LEAK.copy(status = GasLeakStatus.FIXED))
+                MergedGasLeak.of(NGRID_REFERENCE_LEAK.copy(status = GasLeakStatus.MISSING),
+                        HEET_REFERENCE_LEAK.copy(status = GasLeakStatus.FIXED)))
     }
 
     @Test
     fun mergeSelectsProperDate() = assertEquals(
             MERGED_REFERENCE_LEAK.copy(
-                    reportedOn = LocalDate.of(2001, 1, 1),
+                    firstReportedOn = LocalDate.of(2001, 1, 1),
                     fixedOn = LocalDate.of(2001, 1, 2)),
-            NGRID_REFERENCE_LEAK.copy(
+            MergedGasLeak.of(NGRID_REFERENCE_LEAK.copy(
                     reportedOn = LocalDate.of(2001, 1, 1),
-                    fixedOn = LocalDate.of(2001, 1, 2))
-                    merge HEET_REFERENCE_LEAK.copy(
+                    fixedOn = LocalDate.of(2001, 1, 1)),
+                    HEET_REFERENCE_LEAK.copy(
                             reportedOn = LocalDate.of(2001, 1, 2),
-                            fixedOn = LocalDate.of(2001, 1, 2)))
+                            fixedOn = LocalDate.of(2001, 1, 2))))
 
     @Test
-    fun doesNotMergeSameIds() = assertFalse(NGRID_REFERENCE_LEAK
-            .shouldMergeWith(HEET_REFERENCE_LEAK.copy(sourceEntries = listOf(NGRID_ENTRY))))
+    fun doesNotMergeSameIds() = assertFalse(MergedGasLeak.shouldMerge(NGRID_REFERENCE_LEAK,
+            HEET_REFERENCE_LEAK.copy(source = NGRID_SOURCE)))
 
     @Test
     fun doesNotMergeSameSource() {
-        assertFalse(NGRID_REFERENCE_LEAK.shouldMergeWith(NGRID_REFERENCE_LEAK))
-        assertFalse(HEET_REFERENCE_LEAK.shouldMergeWith(HEET_REFERENCE_LEAK))
+        assertFalse(MergedGasLeak.shouldMerge(NGRID_REFERENCE_LEAK, NGRID_REFERENCE_LEAK))
+        assertFalse(MergedGasLeak.shouldMerge(HEET_REFERENCE_LEAK, HEET_REFERENCE_LEAK))
     }
 
     @Test
-    fun doesNotMergeDifferentAddresses() = assertFalse(NGRID_REFERENCE_LEAK
-            .shouldMergeWith(HEET_REFERENCE_LEAK.copy(location = "19 Piper Road, Acton MA 01720")))
-
-    @Test
-    fun doesNotMergeMergedLeak() {
-        assertFalse(MERGED_REFERENCE_LEAK.shouldMergeWith(NGRID_REFERENCE_LEAK))
-        assertFalse(MERGED_REFERENCE_LEAK.shouldMergeWith(HEET_REFERENCE_LEAK))
-    }
+    fun doesNotMergeDifferentAddresses() = assertFalse(MergedGasLeak.shouldMerge(
+            NGRID_REFERENCE_LEAK,
+            HEET_REFERENCE_LEAK.copy(location = "19 Piper Road, Acton MA 01720")))
 }
