@@ -16,11 +16,13 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package ing.leakfix.site.data
+package ing.leakfix.site
 
-import java.time.LocalDate
+import ing.leakfix.site.data.Dataset
+import org.springframework.data.jpa.repository.JpaRepository
+import org.springframework.data.rest.core.annotation.RepositoryRestResource
 
-data class SourceDataset(
-        val vendor: String,
-        val name: String,
-        val between: DatasetValidityRange?)
+@RepositoryRestResource()
+interface DatasetRepository : JpaRepository<Dataset, Long> {
+    fun findById(id: Long): Dataset
+}

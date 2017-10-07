@@ -20,34 +20,25 @@ package ing.leakfix.site
 
 import ing.leakfix.site.data.*
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RestController
-import org.springframework.http.HttpStatus
+import org.springframework.data.rest.webmvc.RepositoryRestController
 import org.springframework.http.ResponseEntity
-import org.springframework.web.bind.annotation.PathVariable
-import org.springframework.web.bind.annotation.DeleteMapping
-import org.springframework.web.bind.annotation.RequestBody
-import org.springframework.web.bind.annotation.PostMapping
-import java.time.LocalDate
+import org.springframework.web.bind.annotation.RequestMapping
+import org.springframework.web.bind.annotation.ResponseBody
+import org.springframework.web.bind.annotation.RestController
 
 
-@RestController
-@RequestMapping("/api/r0/") class LeakController {
+@RepositoryRestController
+class LeakController {
     @Autowired
-    lateinit var repository: GasLeakRepository
+    lateinit var gasLeakRepository: LeakRepository
 
-    /*@RequestMapping("/leaks/at/{location}")
-    fun getLeak(@PathVariable("location") location: String): List<GasLeak> {
-        return repository.findBySourceEntries(location)
-    }*/
-
-    @RequestMapping("leaks/merged")
-    fun getLeaksMerged(): List<MergedGasLeak> {
-        val mergeableLeakSets: MutableList<Array<GasLeak>> = mutableListOf()
-        getLeaks().forEach { testLeak ->
+    @RequestMapping("/leaks/merged")
+    fun getLeaksMerged(): ResponseEntity<List<MergedLeak>> {
+        val mergeableLeakSets: MutableList<Array<Leak>> = mutableListOf()
+        gasLeakRepository.findAll().forEach { testLeak ->
             var added = false
             mergeableLeakSets.forEachIndexed { i, it ->
-                if (MergedGasLeak.shouldMerge(*(it + testLeak))) {
+                if (MergedLeak.mergeable(*(it + testLeak))) {
                     mergeableLeakSets[i] = it + testLeak
                     added = true
                 } else {
@@ -58,28 +49,6 @@ import java.time.LocalDate
                 mergeableLeakSets += arrayOf(testLeak)
             }
         }
-        return mergeableLeakSets.map { MergedGasLeak.of(*it) }
+        return ResponseEntity.ok(mergeableLeakSets.map { MergedLeak.of(*it) })
     }
-
-    @RequestMapping("/leaks")
-    fun getLeaks(): List<GasLeak> = repository.findAll()
-
-    @PostMapping("/leaks")
-    fun addLeak(@RequestBody leak: GasLeak): ResponseEntity<String> {
-        repository.save(leak)
-        return ResponseEntity(HttpStatus.CREATED)
-    }
-
-    //This is of course a very naive implementation! We are assuming unique names...
-    // TODO: Fix
-    /*@DeleteMapping("/leaks/{location}")
-    fun deleteLeak(@PathVariable location: String): ResponseEntity<String> {
-        val leaks = repository.findBySourceEntry(location)
-        if (leaks.size == 1) {
-            val leak = leaks.get(0)
-            repository.delete(leak)
-            return ResponseEntity(HttpStatus.ACCEPTED)
-        }
-        return ResponseEntity(HttpStatus.BAD_REQUEST)
-    }*/
 }

@@ -19,14 +19,17 @@
 package ing.leakfix.site.data
 
 import java.time.LocalDate
+import javax.persistence.Entity
+import javax.persistence.Id
+import javax.persistence.OneToMany
 
-/**
- * Represents the length of time that a SourceDataset covers and is valid for
- */
-data class DatasetValidityRange(val start: LocalDate, val end: LocalDate) {
-    init {
-        if (!start.isBefore(end)) {
-            throw IllegalArgumentException("start date must be before end date")
-        }
-    }
-}
+@Entity
+data class Dataset(
+        @Id
+        val id: Long,
+        val vendor: String,
+        val name: String,
+        val date: LocalDate,
+        @OneToMany(mappedBy = "source")
+        val leaks: List<Leak>)
+// hashtag not bad I must say

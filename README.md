@@ -15,6 +15,12 @@ Also set up a MongoDB instance and configure it in application.properties.
 (For local development, Spring Boot will automatically connect to a MongoDB
 server on localhost.)
 
+## Development
+
+- `curl -X POST -H "Content-Type: application/json" -d '{"vendor": "NGRID", "name": "xd", "date": "2017-01-01"}' localhost:9090/api/r0/datasets`
+- `curl -X POST -H "Content-Type: application/json" -d '{"location": "xd", "status": "FIXED", "size": null, "reportedOn": "2017-01-01", "fixedOn": "2017-01-01"}' localhost:9090/api/r0/leaks`
+- `curl -i -X PUT -H "Content-Type:text/uri-list" -d "http://localhost:9090/api/r0/datasets/0" http://localhost:9090/api/r0/leaks/0/source`
+
 ## License
 
 This program is free software: you can redistribute it and/or modify it under

@@ -20,29 +20,33 @@ package ing.leakfix.site.data
 
 import java.time.LocalDate
 
-data class MergedGasLeak(
-        val fromIds: List<Int>,
-        val inDatasets: List<SourceDataset>,
+data class MergedLeak(
+        val fromIds: List<Long>,
+        val inDatasets: List<Dataset>,
         val location: String,
-        val status: GasLeakStatus,
+        val status: LeakStatus,
         val size: Int?,
         val firstReportedOn: LocalDate?,
         val fixedOn: LocalDate?) {
     companion object {
-        fun shouldMerge(vararg leaks: GasLeak): Boolean {
-            val first = leaks.first()
+        fun mergeable(vararg leaks: Leak): Boolean {
+            if (leaks.size == 1) {
+                return true
+            } else {
+                val first = leaks.first()
 
-            return !leaks.all { it.source == first.source } &&
-                    !leaks.all { it.id == first.id } &&
-                    leaks.all { it.location == first.location }
+                return !leaks.all { it.source == first.source } &&
+                        !leaks.all { it.id == first.id } &&
+                        leaks.all { it.location == first.location }
+            }
         }
 
-        fun of(vararg leaks: GasLeak): MergedGasLeak {
-            if (!shouldMerge(*leaks)) {
+        fun of(vararg leaks: Leak): MergedLeak {
+            if (!mergeable(*leaks)) {
                 throw IllegalArgumentException("Leaks $leaks should not be merged.")
             }
 
-            return MergedGasLeak(
+            return MergedLeak(
                     fromIds = leaks.map { it.id },
                     inDatasets = leaks.map { it.source },
                     location = leaks.first().location,
@@ -51,9 +55,9 @@ data class MergedGasLeak(
                     // Pick fixed -> unrepaired -> missing
                     status = leaks.map { it.status }.maxBy {
                         when (it) {
-                            GasLeakStatus.FIXED -> 3
-                            GasLeakStatus.UNREPAIRED -> 2
-                            GasLeakStatus.MISSING -> 1
+                            LeakStatus.FIXED -> 3
+                            LeakStatus.UNREPAIRED -> 2
+                            LeakStatus.MISSING -> 1
                         } }!!,
                     // Pick the earliest reported-on date and the latest fixed-on date
                     // We want to be conservative here

@@ -18,7 +18,7 @@
 
 package ing.leakfix.site.data
 
-enum class GasLeakStatus {
+enum class LeakStatus {
     UNREPAIRED,
     FIXED,
     MISSING

@@ -18,17 +18,17 @@
 
 package ing.leakfix.site.data
 
-import org.springframework.data.mongodb.core.index.Indexed
 import java.time.LocalDate
+import javax.persistence.*
 
-// TODO Convert sourceEntries to a map-kinda-thing.
-data class GasLeak(
-        val id: Int,
-        val source: SourceDataset,
+@Entity
+data class Leak(
+        @Id
+        val id: Long,
+        @ManyToOne
+        val source: Dataset,
         val location: String,
-        val status: GasLeakStatus,
+        val status: LeakStatus,
         val size: Int?,
         val reportedOn: LocalDate?,
-        val fixedOn: LocalDate?) {
-
-}
+        val fixedOn: LocalDate?)

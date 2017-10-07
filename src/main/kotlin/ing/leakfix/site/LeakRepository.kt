@@ -18,11 +18,11 @@
 
 package ing.leakfix.site
 
-import ing.leakfix.site.data.GasLeak
-import ing.leakfix.site.data.SourceDataset
-import org.springframework.data.mongodb.repository.MongoRepository
+import ing.leakfix.site.data.Leak
+import org.springframework.data.jpa.repository.JpaRepository
+import org.springframework.data.rest.core.annotation.RepositoryRestResource
 
-// ArrayList because it has to be serializable
-interface GasLeakRepository : MongoRepository<GasLeak, ArrayList<SourceDataset>> {
-    //fun findBySourceEntries(sourceEntries: ArrayList<SourceDataset>): GasLeak
+@RepositoryRestResource()
+interface LeakRepository : JpaRepository<Leak, Long> {
+    fun findById(id: Int): Leak
 }
