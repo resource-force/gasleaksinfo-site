@@ -1,6 +1,6 @@
 /*
  * leakfixing-site: a site to show and manage a gas leak database
- * Copyright (C) 2017 Kevin Liu
+ * Copyright (C) 2017 Kevin\ Liu
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,10 +16,19 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package ing.leakfix.site.data
+package info.gasleaks.site
 
-enum class LeakStatus {
-    UNREPAIRED,
-    FIXED,
-    MISSING
+import org.junit.Test
+import org.junit.runner.RunWith
+import org.springframework.boot.test.context.SpringBootTest
+import org.springframework.test.context.junit4.SpringRunner
+
+@RunWith(SpringRunner::class)
+@SpringBootTest
+class GasLeaksInfoSiteApplication {
+
+	@Test
+	fun contextLoads() {
+	}
+
 }

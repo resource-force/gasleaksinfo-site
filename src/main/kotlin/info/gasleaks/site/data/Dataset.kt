@@ -1,6 +1,6 @@
 /*
  * leakfixing-site: a site to show and manage a gas leak database
- * Copyright (C) 2017 Kevin Liu
+ * Copyright (C) 2017 Kevin\ Liu
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,19 +16,20 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package ing.leakfix.site.data
+package info.gasleaks.site.data
 
 import java.time.LocalDate
-import javax.persistence.*
+import javax.persistence.Entity
+import javax.persistence.Id
+import javax.persistence.OneToMany
 
 @Entity
-data class Leak(
+data class Dataset(
         @Id
         val id: Long,
-        @ManyToOne
-        val source: Dataset,
-        val location: String,
-        val status: LeakStatus,
-        val size: Int?,
-        val reportedOn: LocalDate?,
-        val fixedOn: LocalDate?)
+        val vendor: String,
+        val name: String,
+        val date: LocalDate,
+        @OneToMany(mappedBy = "source")
+        val leaks: List<Leak>)
+// hashtag not bad I must say

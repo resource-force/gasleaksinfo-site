@@ -41,7 +41,7 @@ apply plugin: 'org.springframework.boot'
 apply plugin: 'idea'
 
 
-group = 'ing.leakfix.site'
+group = 'info.gasleaks.site'
 version = '0.0.1-SNAPSHOT'
 sourceCompatibility = 1.8
 compileKotlin {

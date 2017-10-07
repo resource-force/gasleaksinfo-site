@@ -16,14 +16,16 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package ing.leakfix.site
+package info.gasleaks.site
 
-import org.springframework.boot.SpringApplication
-import org.springframework.boot.autoconfigure.SpringBootApplication
+import org.springframework.stereotype.Controller
+import org.springframework.ui.Model
+import org.springframework.web.bind.annotation.RequestMapping
 
-@SpringBootApplication
-class LeakfixingSiteApplication
-
-fun main(args: Array<String>) {
-    SpringApplication.run(LeakfixingSiteApplication::class.java, *args)
+@Controller
+class IndexController {
+    @RequestMapping("/")
+    fun index(): String {
+        return "index"
+    }
 }

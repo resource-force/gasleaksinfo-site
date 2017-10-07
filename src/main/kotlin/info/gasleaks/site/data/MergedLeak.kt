@@ -1,6 +1,6 @@
 /*
  * leakfixing-site: a site to show and manage a gas leak database
- * Copyright (C) 2017 Kevin Liu
+ * Copyright (C) 2017 Kevin\ Liu
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,7 +16,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package ing.leakfix.site.data
+package info.gasleaks.site.data
 
 import java.time.LocalDate
 
@@ -58,7 +58,8 @@ data class MergedLeak(
                             LeakStatus.FIXED -> 3
                             LeakStatus.UNREPAIRED -> 2
                             LeakStatus.MISSING -> 1
-                        } }!!,
+                        }
+                    }!!,
                     // Pick the earliest reported-on date and the latest fixed-on date
                     // We want to be conservative here
                     firstReportedOn = leaks.map { it.reportedOn }.filterNotNull().min(),

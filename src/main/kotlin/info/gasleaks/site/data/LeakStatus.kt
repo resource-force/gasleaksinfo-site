@@ -16,19 +16,10 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package ing.leakfix.site
+package info.gasleaks.site.data
 
-import org.junit.Test
-import org.junit.runner.RunWith
-import org.springframework.boot.test.context.SpringBootTest
-import org.springframework.test.context.junit4.SpringRunner
-
-@RunWith(SpringRunner::class)
-@SpringBootTest
-class LeakfixingSiteApplicationTests {
-
-	@Test
-	fun contextLoads() {
-	}
-
+enum class LeakStatus {
+    UNREPAIRED,
+    FIXED,
+    MISSING
 }

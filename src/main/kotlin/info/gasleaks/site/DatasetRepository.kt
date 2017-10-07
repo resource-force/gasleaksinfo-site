@@ -1,6 +1,6 @@
 /*
  * leakfixing-site: a site to show and manage a gas leak database
- * Copyright (C) 2017 Kevin Liu
+ * Copyright (C) 2017 Kevin\ Liu
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,20 +16,13 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package ing.leakfix.site.data
+package info.gasleaks.site
 
-import java.time.LocalDate
-import javax.persistence.Entity
-import javax.persistence.Id
-import javax.persistence.OneToMany
+import info.gasleaks.site.data.Dataset
+import org.springframework.data.jpa.repository.JpaRepository
+import org.springframework.data.rest.core.annotation.RepositoryRestResource
 
-@Entity
-data class Dataset(
-        @Id
-        val id: Long,
-        val vendor: String,
-        val name: String,
-        val date: LocalDate,
-        @OneToMany(mappedBy = "source")
-        val leaks: List<Leak>)
-// hashtag not bad I must say
+@RepositoryRestResource()
+interface DatasetRepository : JpaRepository<Dataset, Long> {
+    fun findById(id: Long): Dataset
+}

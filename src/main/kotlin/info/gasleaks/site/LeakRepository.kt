@@ -1,6 +1,6 @@
 /*
  * leakfixing-site: a site to show and manage a gas leak database
- * Copyright (C) 2017 Kevin Liu
+ * Copyright (C) 2017 Kevin\ Liu
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,16 +16,13 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package ing.leakfix.site
+package info.gasleaks.site
 
-import org.springframework.stereotype.Controller
-import org.springframework.ui.Model
-import org.springframework.web.bind.annotation.RequestMapping
+import info.gasleaks.site.data.Leak
+import org.springframework.data.jpa.repository.JpaRepository
+import org.springframework.data.rest.core.annotation.RepositoryRestResource
 
-@Controller
-class IndexController {
-    @RequestMapping("/")
-    fun index(): String {
-        return "index"
-    }
+@RepositoryRestResource()
+interface LeakRepository : JpaRepository<Leak, Long> {
+    fun findById(id: Int): Leak
 }
