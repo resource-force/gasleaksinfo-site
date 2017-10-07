@@ -30,14 +30,16 @@ data class MergedLeak(
         val fixedOn: LocalDate?) {
     companion object {
         fun mergeable(vararg leaks: Leak): Boolean {
-            if (leaks.size == 1) {
-                return true
-            } else {
-                val first = leaks.first()
+            return when (leaks.size) {
+                0 -> false
+                1 -> true
+                else -> {
+                    val first = leaks.first()
 
-                return !leaks.all { it.source == first.source } &&
-                        !leaks.all { it.id == first.id } &&
-                        leaks.all { it.location == first.location }
+                    !leaks.all { it.source == first.source } &&
+                            !leaks.all { it.id == first.id } &&
+                            leaks.all { it.location == first.location }
+                }
             }
         }
 

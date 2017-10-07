@@ -18,12 +18,17 @@
 
 package info.gasleaks.site.data
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo
+import com.fasterxml.jackson.annotation.JsonIgnore
+import com.fasterxml.jackson.annotation.ObjectIdGenerator
+import com.fasterxml.jackson.annotation.ObjectIdGenerators
 import java.time.LocalDate
 import javax.persistence.Entity
 import javax.persistence.Id
 import javax.persistence.OneToMany
 
 @Entity
+@JsonIdentityInfo(generator = ObjectIdGenerators.IntSequenceGenerator::class, property = "id")
 data class Dataset(
         @Id
         val id: Long,
@@ -31,5 +36,6 @@ data class Dataset(
         val name: String,
         val date: LocalDate,
         @OneToMany(mappedBy = "source")
+        @JsonIgnore
         val leaks: List<Leak>)
 // hashtag not bad I must say

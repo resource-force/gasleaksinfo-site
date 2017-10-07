@@ -18,14 +18,19 @@
 
 package info.gasleaks.site.data
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo
+import com.fasterxml.jackson.annotation.JsonIgnore
+import com.fasterxml.jackson.annotation.ObjectIdGenerators
 import java.time.LocalDate
 import javax.persistence.*
 
 @Entity
+@JsonIdentityInfo(generator = ObjectIdGenerators.IntSequenceGenerator::class, property = "id")
 data class Leak(
         @Id
         val id: Long,
         @ManyToOne
+        @JsonIgnore
         val source: Dataset,
         val location: String,
         val status: LeakStatus,
