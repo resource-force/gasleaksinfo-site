@@ -11,6 +11,10 @@ module.exports = {
         publicPath: "/static/build/",
         filename: "bundle.js"
     },
+    resolve: {
+        // Add `.ts` and `.tsx` as a resolvable extension.
+        extensions: ['.ts', '.tsx', '.js']
+    },
     module: {
         loaders: [
             {
@@ -35,8 +39,9 @@ module.exports = {
                     prependPath: false
                 }
             },
-            publicPath: 'http://localhost:9090/static/build/'
+            publicPath: 'http://localhost:9090/static/build/',
         },
     plugins: [
-    ]
+    ],
+    devtool: 'source-map'
 };
