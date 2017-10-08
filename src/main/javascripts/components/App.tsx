@@ -1,27 +1,20 @@
 import * as React from 'react';
-import Leak from './Leak';
+import Leak from '../data/Leak';
+import getLeaks from '../helpers/getLeaks';
 
 export default class App extends React.Component {
     state = { leaks: Array<Leak>() }
     async componentDidMount() {
-        const leaks = await fetch('/api/r0/leaks')
-            .then(res => res.json())
-            .then(json => json._embedded.leaks);
-        this.setState({
-             leaks: await Promise.all(leaks.map(async (leak: any) => {
-                leak.source = await fetch(leak._links.source.href).then(res => res.json());
-                return leak;
-            }
-        ))});
+        this.setState({ leaks: await getLeaks() });
     }
     render() {
-        console.log(this.state)
         return (
             <div>
                 <h1>Leaks</h1>
                 <table>
                     <thead>
                         <tr>
+                            <th>Link</th>
                             <th>Status</th>
                             <th>Location</th>
                             <th>Reported on</th>
@@ -31,7 +24,8 @@ export default class App extends React.Component {
                     </thead>
                     <tbody>
                         {this.state.leaks.map((leak, i) =>
-                        <tr key={i}>
+                        <tr key={leak.href.toString()}>
+                            <td><a href={leak.href.toString()}>Link</a></td>
                             <td>{leak.status}</td>
                             <td>{leak.location}</td>
                             <td>{leak.reportedOn}</td>
