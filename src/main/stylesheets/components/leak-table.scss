@@ -1,0 +1,8 @@
+@import '../shared/variables';
+.leak-table {
+    border-collapse: collapse;
+    td, th {
+        border: 1px solid $fg-color;
+        padding: 0.1em 0.25em;
+    }
+}

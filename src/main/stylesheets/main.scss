@@ -1,4 +1,3 @@
-.leak-table {
-    background-color: grey;
-    color: blue;
-}
+@import 'boilerplate/box-sizing';
+@import 'components/app';
+@import 'components/leak-table';
