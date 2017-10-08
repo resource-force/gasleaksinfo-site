@@ -41,7 +41,6 @@ module.exports = {
             },
             publicPath: 'http://localhost:9090/static/build/',
         },
-    plugins: [
-    ],
+    plugins: [ ],
     devtool: 'source-map'
 };
