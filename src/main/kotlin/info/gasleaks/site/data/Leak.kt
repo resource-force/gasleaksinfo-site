@@ -25,9 +25,9 @@ import java.time.LocalDate
 import javax.persistence.*
 
 @Entity
-@JsonIdentityInfo(generator = ObjectIdGenerators.IntSequenceGenerator::class, property = "id")
 data class Leak(
         @Id
+        @GeneratedValue
         val id: Long,
         @ManyToOne
         @JsonIgnore

@@ -23,14 +23,16 @@ import com.fasterxml.jackson.annotation.JsonIgnore
 import com.fasterxml.jackson.annotation.ObjectIdGenerator
 import com.fasterxml.jackson.annotation.ObjectIdGenerators
 import java.time.LocalDate
+import javax.annotation.Generated
 import javax.persistence.Entity
+import javax.persistence.GeneratedValue
 import javax.persistence.Id
 import javax.persistence.OneToMany
 
 @Entity
-@JsonIdentityInfo(generator = ObjectIdGenerators.IntSequenceGenerator::class, property = "id")
 data class Dataset(
         @Id
+        @GeneratedValue
         val id: Long,
         val vendor: String,
         val name: String,

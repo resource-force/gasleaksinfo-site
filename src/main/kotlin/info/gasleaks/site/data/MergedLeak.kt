@@ -22,7 +22,7 @@ import java.time.LocalDate
 
 data class MergedLeak(
         val fromIds: List<Long>,
-        val inDatasets: List<Dataset>,
+        val inDatasets: List<Long>,
         val location: String,
         val status: LeakStatus,
         val size: Int?,
@@ -50,7 +50,7 @@ data class MergedLeak(
 
             return MergedLeak(
                     fromIds = leaks.map { it.id },
-                    inDatasets = leaks.map { it.source },
+                    inDatasets = leaks.map { it.source.id },
                     location = leaks.first().location,
                     // Pick the lowest size or the non-null one, or null.
                     size = leaks.map { it.size }.filterNotNull().min(),

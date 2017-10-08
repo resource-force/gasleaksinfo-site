@@ -19,7 +19,7 @@ server on localhost.)
 
 - `curl -X POST -H "Content-Type: application/json" -d '{"vendor": "NGRID", "name": "xd", "date": "2017-01-01"}' localhost:9090/api/r0/datasets`
 - `curl -X POST -H "Content-Type: application/json" -d '{"location": "xd", "status": "FIXED", "size": null, "reportedOn": "2017-01-01", "fixedOn": "2017-01-01"}' localhost:9090/api/r0/leaks`
-- `curl -i -X PUT -H "Content-Type:text/uri-list" -d "http://localhost:9090/api/r0/datasets/0" http://localhost:9090/api/r0/leaks/0/source`
+- `curl -i -X PUT -H "Content-Type:text/uri-list" -d "http://localhost:9090/api/r0/datasets/1" http://localhost:9090/api/r0/leaks/1/source`
 
 ## License
 
