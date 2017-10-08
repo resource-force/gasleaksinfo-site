@@ -5,7 +5,7 @@ const path = require('path');
 
 module.exports = {
     context: path.join(__dirname, "src/main"),
-    entry: "./javascripts/main.ts",
+    entry: "./javascripts/main.tsx",
     output: {
         path: path.join(__dirname, 'src/main/resources/static/build'),
         publicPath: "/static/build/",
