@@ -36,7 +36,8 @@ data class Leak(
         val status: LeakStatus,
         val size: Int?,
         val reportedOn: LocalDate?,
-        val fixedOn: LocalDate?) {
+        val fixedOn: LocalDate?,
+        val vendorId: Int?) {
     // HACK to avoid recursive loop of calling toString on dataset which calls
     // toString on Leak etc. For some reason, Spring/JPA calls this when you
     // navigate to /api/r0/leaks/#, even though it outputs Leak as serialized
