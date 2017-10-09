@@ -1,3 +1,15 @@
 .header {
     @extend %card;
+    text-align: center;
+}
+.header__siteName {
+    font-variant: small-caps;
+    font-size: 3em;
+    margin: 1rem 0;
+}
+.header__slogan {
+    font-style: italic;
+    &::before, &::after {
+        content: " — ";
+    }
 }
