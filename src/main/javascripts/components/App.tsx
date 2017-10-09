@@ -6,7 +6,7 @@ export default class App extends React.PureComponent {
     render() {
         return (
             <div className="app">
-                <h1 className="app__header">Leaks</h1>
+                <h1 className="app__header">Gas Leaks in Acton</h1>
                 <LeakTable />
                 <Footer />
             </div>

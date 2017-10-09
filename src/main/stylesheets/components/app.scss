@@ -3,11 +3,11 @@
     color: $fg-color;
     background-color: $bg-color;
     font-family: $font-family-sans;
+    border-radius: 0.5em;
+    
+    box-shadow: 0.25em 0.25em 0.1em $fg-color;
 
     max-width: 70em;
     margin: 0 auto;
     padding: 1em;
-}
-.app__header {
-    font-family: $font-family-serif;
 }

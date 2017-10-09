@@ -5,7 +5,7 @@ export default class Footer extends React.PureComponent {
         return (
             // TODO better message!
             <footer className="footer">
-                Made by Kevin Liu and Kunal Sharda for Resource Force.
+                Made by Kevin Liu, Kunal Sharda, and Aneesh Edara for Resource Force.
             </footer>
         );
     }
