@@ -9,7 +9,7 @@ export default class LeakTable extends React.Component {
     }
     render() {
         return (
-            <table className="leak-table">
+            <table className="leakTable">
                 <thead>
                     <tr>
                         <th>Link</th>
