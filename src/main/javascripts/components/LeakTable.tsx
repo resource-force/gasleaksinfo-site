@@ -8,7 +8,7 @@ export default class LeakTable extends React.Component {
     async componentDidMount() {
         this.setState({ leaks: await getLeaks() });
     }
-    handleClick(rowNumber) {
+    private expandRow(rowNumber) {
         this.setState(Object.assign(
             this.state,
             {
@@ -36,7 +36,7 @@ export default class LeakTable extends React.Component {
                             key={leak.href.toString()}
                             leak={leak}
                             expanded={i == this.state.expandedRow}
-                            onClick={() => this.handleClick(i)}/>
+                            onClick={() => this.expandRow(i)} />
                     )}
                 </tbody>
             </table>
