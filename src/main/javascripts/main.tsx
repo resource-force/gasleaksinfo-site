@@ -1,4 +1,5 @@
-require("../stylesheets/main.scss");
+import 'normalize-scss';
+import '../stylesheets/main.scss';
 
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
