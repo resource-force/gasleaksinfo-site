@@ -4,9 +4,16 @@ import getLeaks from '../helpers/getLeaks';
 import LeakRow from './LeakRow';
 
 export default class LeakTable extends React.Component {
-    state = { leaks: Array<Leak>() }
+    state = { leaks: Array<Leak>(), expandedRow: -1 }
     async componentDidMount() {
         this.setState({ leaks: await getLeaks() });
+    }
+    handleClick(rowNumber) {
+        this.setState(Object.assign(
+            this.state,
+            {
+                expandedRow: this.state.expandedRow == rowNumber ? -1 : rowNumber
+            }));
     }
     render() {
         return (
@@ -25,7 +32,11 @@ export default class LeakTable extends React.Component {
                 </thead>
                 <tbody>
                     {this.state.leaks.map((leak, i) =>
-                        <LeakRow leak={leak} />
+                        <LeakRow
+                            key={leak.href.toString()}
+                            leak={leak}
+                            expanded={i == this.state.expandedRow}
+                            onClick={() => this.handleClick(i)}/>
                     )}
                 </tbody>
             </table>
