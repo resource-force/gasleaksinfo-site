@@ -31,9 +31,6 @@ buildscript {
         classpath "org.jetbrains.kotlin:kotlin-noarg:$kotlinVersion"
     }
 }
-plugins {
-    id "com.moowork.node" version "1.2.0"
-}
 apply plugin: 'kotlin'
 apply plugin: 'kotlin-spring'
 apply plugin: "kotlin-jpa"
@@ -71,12 +68,6 @@ dependencies {
     compile 'org.springframework.boot:spring-boot-devtools'
 }
 
-npm_run {
-    args = ['build']
-    dependsOn npmInstall
-}
-
 bootRun {
     addResources = true
-    dependsOn npm_run
 }
