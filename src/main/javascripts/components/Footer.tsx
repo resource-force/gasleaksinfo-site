@@ -1,7 +1,7 @@
-import * as React from 'react';
+import * as React from "react";
 
 export default class Footer extends React.PureComponent {
-    render() {
+    public render() {
         return (
             // TODO better message!
             <footer className="footer">

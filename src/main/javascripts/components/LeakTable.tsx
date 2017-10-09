@@ -1,21 +1,14 @@
-import * as React from 'react';
-import Leak from '../data/Leak';
-import getLeaks from '../helpers/getLeaks';
-import LeakRow from './LeakRow';
+import * as React from "react";
+import Leak from "../data/Leak";
+import getLeaks from "../helpers/getLeaks";
+import LeakRow from "./LeakRow";
 
 export default class LeakTable extends React.Component {
-    state = { leaks: Array<Leak>(), expandedRow: -1 }
-    async componentDidMount() {
+    public state = { leaks: Array<Leak>(), expandedRow: -1 };
+    public async componentDidMount() {
         this.setState({ leaks: await getLeaks() });
     }
-    private expandRow(rowNumber) {
-        this.setState(Object.assign(
-            this.state,
-            {
-                expandedRow: this.state.expandedRow == rowNumber ? -1 : rowNumber
-            }));
-    }
-    render() {
+    public render() {
         return (
             <table className="leakTable">
                 <thead>
@@ -35,11 +28,18 @@ export default class LeakTable extends React.Component {
                         <LeakRow
                             key={leak.href.toString()}
                             leak={leak}
-                            expanded={i == this.state.expandedRow}
-                            onClick={() => this.expandRow(i)} />
+                            expanded={i === this.state.expandedRow}
+                            onClick={() => this.expandRow(i)} />,
                     )}
                 </tbody>
             </table>
         );
+    }
+    private expandRow(rowNumber) {
+        this.setState(Object.assign(
+            this.state,
+            {
+                expandedRow: this.state.expandedRow === rowNumber ? -1 : rowNumber,
+            }));
     }
 }

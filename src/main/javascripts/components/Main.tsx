@@ -1,7 +1,7 @@
-import * as React from 'react';
-import { BrowserRouter, Route } from 'react-router-dom';
-import AboutPage from './AboutPage';
-import MainPage from './MainPage';
+import * as React from "react";
+import { BrowserRouter, Route } from "react-router-dom";
+import AboutPage from "./AboutPage";
+import MainPage from "./MainPage";
 
 export default function Main() {
     return (

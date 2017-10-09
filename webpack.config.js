@@ -19,6 +19,12 @@ module.exports = {
         loaders: [
             {
                 test: /\.tsx?$/,
+                enforce: 'pre',
+                loader: 'tslint-loader',
+                options: { /* Loader options go here */ }
+            },
+            {
+                test: /\.tsx?$/,
                 loader: ['babel-loader?presets[]=env', 'ts-loader']
             },
             {

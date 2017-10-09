@@ -1,5 +1,5 @@
-import * as React from 'react';
-import Leak from '../data/Leak';
+import * as React from "react";
+import Leak from "../data/Leak";
 
 export default function LeakRow(props: { leak: Leak, expanded: boolean, onClick: () => void }) {
     if (props.expanded) {
