@@ -1,11 +1,11 @@
 {
-  "name": "leakfixing-site",
+  "name": "gasleaksinfo-site",
   "version": "0.0.1",
-  "description": "A Spring Boot + MongoDB web app to track gas leaks in Acton",
+  "description": "A Spring Boot + React web app to track gas leaks in Acton",
   "main": "index.js",
   "scripts": {
     "build": "webpack",
-    "watch": "webpack-dev-server --inline",
+    "start": "webpack-dev-server --inline",
     "test": "./gradlew test"
   },
   "repository": {
@@ -23,7 +23,6 @@
   },
   "homepage": "https://github.com/resource-force/leakfixing-site#readme",
   "devDependencies": {
-    "@types/node": "^8.0.30",
     "autoprefixer": "^7.1.5",
     "babel-core": "^6.26.0",
     "babel-loader": "^7.1.2",
@@ -38,17 +37,19 @@
     "ts-loader": "^2.3.7",
     "tslint": "^5.7.0",
     "tslint-loader": "^3.5.3",
-    "typescript": "^2.5.2",
+    "typescript": "^2.5.3",
     "webpack": "^3.6.0",
-    "webpack-dev-server": "^2.8.2"
+    "webpack-dev-server": "^2.9.1"
   },
   "private": true,
   "dependencies": {
     "@types/react": "^16.0.10",
     "@types/react-dom": "^16.0.1",
+    "@types/react-leaflet": "^1.1.4",
     "@types/react-router-dom": "^4.0.8",
     "react": "^16.0.0",
     "react-dom": "^16.0.0",
+    "react-leaflet": "^1.7.0",
     "react-router-dom": "^4.2.2"
   }
 }
