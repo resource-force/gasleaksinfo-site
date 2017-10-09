@@ -1,6 +1,7 @@
 import * as React from 'react';
 import Leak from '../data/Leak';
 import getLeaks from '../helpers/getLeaks';
+import LeakRow from './LeakRow';
 
 export default class LeakTable extends React.Component {
     state = { leaks: Array<Leak>() }
@@ -24,16 +25,7 @@ export default class LeakTable extends React.Component {
                 </thead>
                 <tbody>
                     {this.state.leaks.map((leak, i) =>
-                        <tr key={leak.href.toString()}>
-                            <td><a href={leak.href.toString()}>Link</a></td>
-                            <td>{leak.location}</td>
-                            <td>{leak.status}</td>
-                            <td>{leak.size}</td>
-                            <td>{leak.reportedOn}</td>
-                            <td>{leak.fixedOn}</td>
-                            <td>{leak.vendorId}</td>
-                            <td>{leak.source.vendor} - {leak.source.name} - {leak.source.date}</td>
-                        </tr>
+                        <LeakRow leak={leak} />
                     )}
                 </tbody>
             </table>
