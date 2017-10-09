@@ -1,5 +1,9 @@
 import * as React from 'react';
 
 export default function Header() {
-    return <h1 className="header">Gasleaks.info</h1>;
+    return (
+        <header className="header">
+            <h1>Gasleaks.info</h1>
+        </header>
+    );
 }

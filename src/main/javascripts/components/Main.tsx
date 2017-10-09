@@ -6,7 +6,7 @@ import MainPage from './MainPage';
 export default function Main() {
     return (
         <BrowserRouter>
-            <div>
+            <div className="main">
                 <Route path="/" exact component={MainPage} />
                 <Route path="/about" exact component={AboutPage} />
             </div>

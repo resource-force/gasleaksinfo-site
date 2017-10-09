@@ -1,4 +1,6 @@
+@import '../partials/card';
 .footer {
+    @extend %card;
     color: $fg-color-muted;
     text-align: center;
     margin: 0.5em 0;
