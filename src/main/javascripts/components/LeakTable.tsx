@@ -1,6 +1,7 @@
 import * as React from "react";
+
 import Leak from "../data/Leak";
-import getLeaks from "../helpers/getLeaks";
+import {getLeaks} from "../helpers/client";
 import LeakRow from "./LeakRow";
 
 export default class LeakTable extends React.Component {
@@ -29,17 +30,20 @@ export default class LeakTable extends React.Component {
                             key={leak.href.toString()}
                             leak={leak}
                             expanded={i === this.state.expandedRow}
-                            onClick={() => this.expandRow(i)} />,
+                            onClick={() => this.expandRow(i)}
+                            onUpdate={(newLeak) => this.updateLeak(i, newLeak)} />,
                     )}
                 </tbody>
             </table>
         );
     }
     private expandRow(rowNumber) {
-        this.setState(Object.assign(
-            this.state,
-            {
-                expandedRow: this.state.expandedRow === rowNumber ? -1 : rowNumber,
-            }));
+        this.setState({
+            expandedRow: this.state.expandedRow === rowNumber ? -1 : rowNumber,
+        });
+    }
+    private updateLeak(rowNumber, leak) {
+        this.state.leaks[rowNumber] = leak;
+        this.setState({ leaks: this.state.leaks, expandedRow: -1 });
     }
 }

@@ -6,8 +6,7 @@ A Spring Boot + MongoDB web app to track gas leaks in Acton
 
 Requirements: Gradle, NodeJS + NPM.
 
-1. Run `gradle bootRun` to do a one-time build of bundle.js and start Spring
-Boot.
+1. Run `gradle bootRun` to do a one-time build of bundle.js and start Spring Boot.
 2. Run `npm start` to start the webpack dev server on port 9090.
 3. Go to [https://localhost:9090](https://localhost:9090) to view the site.
 

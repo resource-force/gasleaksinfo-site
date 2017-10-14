@@ -1,10 +1,11 @@
 import Leak from "../data/Leak";
 
-export default async function getLeaks() {
-    return fetch("/api/r0/leaks")
+import api from "../helpers/api";
+
+export async function getLeaks() {
+    return api("/api/r0/leaks")
         // Get JSON response
-        .then((res) => res.json())
-        .then((json) => json._embedded.leaks)
+        .then((res) => res.entity._embedded.leaks)
         // Set href to leak reference
         .then((leaks) => {
             leaks.forEach((leak) => leak.href = new URL(leak._links.self.href));

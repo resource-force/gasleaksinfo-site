@@ -21,7 +21,10 @@ module.exports = {
                 test: /\.tsx?$/,
                 enforce: 'pre',
                 loader: 'tslint-loader',
-                options: { /* Loader options go here */ }
+                options: {
+                    emitErrors: true,
+                    failOnHint: true
+                }
             },
             {
                 test: /\.tsx?$/,

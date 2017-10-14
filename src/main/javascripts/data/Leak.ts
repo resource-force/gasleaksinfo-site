@@ -9,4 +9,5 @@ export default interface Leak {
     fixedOn: Date | null;
     source: Dataset;
     vendorId: number | null;
+    notes: string | null;
 }
