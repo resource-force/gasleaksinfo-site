@@ -1,8 +1,10 @@
 import * as React from "react";
+
 import Leak from "../data/Leak";
+import * as client from "../helpers/client";
 
 export default class LeakRow extends React.Component<
-    { leak: Leak, expanded: boolean, onClick: () => void, onUpdate: (Leak) => void },
+    { leak: Leak, expanded: boolean, onToggleExpand: () => void, onUpdate: (Leak) => void },
     Leak> {
     public constructor(props) {
         super(props);
@@ -16,7 +18,7 @@ export default class LeakRow extends React.Component<
                 <tr className="leakRow--expanded">
                     <td colSpan={8}>
                         <form onSubmit={this.handleSubmit}>
-                            <h2>Leak editing for {this.state.href.toString()}</h2>
+                            <h2>Editing leak #{this.state.id}</h2>
                             <p><label>Location:
                                 <input name="location"
                                     value={this.state.location}
@@ -34,8 +36,7 @@ export default class LeakRow extends React.Component<
             );
         } else {
             return (
-                <tr className="leakRow" onClick={this.props.onClick}>
-                    <td><a href={this.props.leak.href.toString()}>Link</a></td>
+                <tr className="leakRow" onClick={this.props.onToggleExpand}>
                     <td>{this.props.leak.location}</td>
                     <td>{this.props.leak.status}</td>
                     <td>{this.props.leak.size}</td>
@@ -52,7 +53,7 @@ export default class LeakRow extends React.Component<
     private handleSubmit(event: React.FormEvent<HTMLFormElement>) {
         event.preventDefault();
         this.props.onUpdate(this.state);
-        // goodbye cruel world (element should get destroyed and recreated)
+
     }
     private handleInputChange(event) {
         const target = event.target;

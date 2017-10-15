@@ -1,7 +1,7 @@
 import Dataset from './Dataset';
 
 export default interface Leak {
-    href: URL;
+    id: number;
     location: string;
     status: "FIXED" | "MISSING" | "UNREPAIRED";
     size: number | null;

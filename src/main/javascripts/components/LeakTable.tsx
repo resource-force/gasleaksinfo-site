@@ -1,20 +1,25 @@
 import * as React from "react";
 
 import Leak from "../data/Leak";
-import {getLeaks} from "../helpers/client";
+import * as client from "../helpers/client";
 import LeakRow from "./LeakRow";
 
+enum FocusState {
+    LOADING,
+    EXPANDED,
+    NONE,
+}
+
 export default class LeakTable extends React.Component {
-    public state = { leaks: Array<Leak>(), expandedRow: -1 };
+    public state = { leaks: Array<Leak>(), focusState: FocusState.NONE, focusedRow: -1 };
     public async componentDidMount() {
-        this.setState({ leaks: await getLeaks() });
+        this.setState({ leaks: await client.getLeaks() });
     }
     public render() {
         return (
             <table className="leakTable">
                 <thead>
                     <tr>
-                        <th>Link</th>
                         <th>Location</th>
                         <th>Status</th>
                         <th>Size</th>
@@ -25,25 +30,43 @@ export default class LeakTable extends React.Component {
                     </tr>
                 </thead>
                 <tbody>
-                    {this.state.leaks.map((leak, i) =>
-                        <LeakRow
-                            key={leak.href.toString()}
-                            leak={leak}
-                            expanded={i === this.state.expandedRow}
-                            onClick={() => this.expandRow(i)}
-                            onUpdate={(newLeak) => this.updateLeak(i, newLeak)} />,
-                    )}
+                    {this.state.leaks.map((leak, i) => {
+                        if (this.state.focusState === FocusState.LOADING) {
+                            return (
+                                <tr key={leak.id}><td colSpan={7}>UPDATING</td></tr>
+                            );
+                        } else {
+                            return (
+                                <LeakRow
+                                    key={leak.id}
+                                    leak={leak}
+                                    expanded={i === this.state.focusedRow}
+                                    onToggleExpand={() => this.toggleRowFocus(FocusState.EXPANDED, i)}
+                                    onUpdate={(newLeak) => this.updateLeak(i, newLeak)} />
+                            );
+                        }
+                    })}
                 </tbody>
             </table>
         );
     }
-    private expandRow(rowNumber) {
+    private toggleRowFocus(focus: FocusState, rowNumber?: number) {
+        if (rowNumber == null) {
+            rowNumber = this.state.focusedRow;
+        }
         this.setState({
-            expandedRow: this.state.expandedRow === rowNumber ? -1 : rowNumber,
+            focusState: focus,
+            focusedRow: this.state.focusedRow === rowNumber ? -1 : rowNumber,
         });
     }
-    private updateLeak(rowNumber, leak) {
-        this.state.leaks[rowNumber] = leak;
-        this.setState({ leaks: this.state.leaks, expandedRow: -1 });
+    private async updateLeak(rowNumber, newLeak) {
+        this.toggleRowFocus(FocusState.LOADING, rowNumber);
+        await client.updateLeak(newLeak.id, newLeak);
+        // update state
+        this.state.leaks[rowNumber] = newLeak;
+        this.setState({
+            leaks: this.state.leaks,
+        });
+        this.toggleRowFocus(FocusState.NONE);
     }
 }
