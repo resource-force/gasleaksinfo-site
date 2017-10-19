@@ -1,7 +1,8 @@
 {
   "compilerOptions": {
+    "allowSyntheticDefaultImports": true,
     "lib": [ "es2015", "dom" ],
-    "module": "commonjs",
+    "module": "es2015",
     "preserveConstEnums": true,
     "strictNullChecks": true,
     "sourceMap": true,

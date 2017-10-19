@@ -45,11 +45,13 @@
   "dependencies": {
     "@types/react": "^16.0.10",
     "@types/react-dom": "^16.0.1",
+    "@types/react-helmet": "^5.0.3",
     "@types/react-leaflet": "^1.1.4",
     "@types/react-router-dom": "^4.0.8",
     "@types/rest": "^1.3.28",
     "react": "^16.0.0",
     "react-dom": "^16.0.0",
+    "react-helmet": "^5.2.0",
     "react-leaflet": "^1.7.0",
     "react-router-dom": "^4.2.2",
     "rest": "^2.0.0"

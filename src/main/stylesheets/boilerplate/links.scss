@@ -1,0 +1,8 @@
+@import '../shared/variables';
+
+a {
+    color: $fg-color;
+    &:hover {
+        color: $fg-color-highlight;
+    }
+}
